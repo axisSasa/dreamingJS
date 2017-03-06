@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>convert Arabic numerals into Chinese characters</title>
+</head>
+<body>
+	<label>请输入要转换的阿拉伯数字：<input id="arabNum" type="number"/></label>
+	<button id="commit">开始转换</button>
+	<div>阿拉伯数字转换后的汉字为：<span id="chineseNum">尚未转换</span></div>
+	
+	<script type="text/javascript">
+		(function() {
+			var convert = function( arabnum ) {
+				var result = [],
+					islastNumZero = false,
+					cnum = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'],
+				//单位最大限制在万京
+					unit = [' ', '十', '百', '千', '万', '十', '百', '千', '亿', '十', '百', '千', '万', '兆', '十', '百', '千', '万', '亿', '京', '十', '百', '千', '万'],
+					specialUnit = [4, 8, 13, 19],
+					specialCUnit = ['万', '亿', '兆', '京'];
+				//非科学计数法处理
+				for (var i = arabnum.length - 1; i >= 0; i--) {
+
+					var unitTemp = unit[arabnum.length - 1 - i],
+						cnumTemp = cnum[arabnum[i]];	
+
+					if( arabnum[i] != 0) {
+
+						//加入单位
+						result.unshift(unitTemp);
+						//加入数字位
+						result.unshift(cnumTemp);
+
+						islastNumZero = false;
+					} else {
+
+						//处理 零万 零亿 零兆 零京
+						console.log(arabnum.length - 1 - i);
+						if ( specialUnit.indexOf(arabnum.length - 1 - i) != -1 ) {
+							//处理连续零万 零亿 零兆 零京的情况
+							if (specialCUnit.indexOf(result[0]) != -1) {
+								result[0] = unitTemp;
+							} else {
+								result.unshift(unitTemp);
+							}
+						}
+						//处理连续零
+						if (!islastNumZero) {
+							result.unshift(cnum[0]);
+						}
+						islastNumZero = true;
+					}
+				}
+				//处理十万 十亿 十兆 十京 的特殊说法	
+				if (result[0] == '一' && result[1] == '十') {
+					result.shift();
+				}
+				console.log(result);
+				return result.join('');
+			};
+
+			var commitHandel = function() {
+				var arabNum = document.getElementById("arabNum");
+				document.getElementById("chineseNum").innerText = convert(arabNum.value);
+				arabNum.value = '';
+			};
+
+			document.getElementById("commit").addEventListener('click', commitHandel, false);
+		})();
+	</script>
+</body>
+</html>
