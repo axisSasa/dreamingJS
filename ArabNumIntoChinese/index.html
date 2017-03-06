@@ -35,7 +35,6 @@
 					} else {
 
 						//处理 零万 零亿 零兆 零京
-						console.log(arabnum.length - 1 - i);
 						if ( specialUnit.indexOf(arabnum.length - 1 - i) != -1 ) {
 							//处理连续零万 零亿 零兆 零京的情况
 							if (specialCUnit.indexOf(result[0]) != -1) {
@@ -52,10 +51,10 @@
 					}
 				}
 				//处理十万 十亿 十兆 十京 的特殊说法	
-				if (result[0] == '一' && result[1] == '十') {
+				if (result[0] == cnum[1] && result[1] == unit[1]) {
 					result.shift();
 				}
-				console.log(result);
+
 				return result.join('');
 			};
 
